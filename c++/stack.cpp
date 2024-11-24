@@ -1,5 +1,10 @@
 #include<bits/stdc++.h>
 using namespace std;
+
+
+
+
+
 int main(){
     stack<int>s;
     s.push(7);
@@ -7,11 +12,14 @@ int main(){
     s.push(6);
     s.push(9);
     s.pop();
+    cout<<s.top()<<endl;
+    cout<<s.size()<<endl;
+    cout<<s.empty()<<endl;
 
-    stack<int>s1,s2;
-    s1.swap(s2);
-    cout<<s.top();
-    cout<<s.size();
-    cout<<s.empty();
+    //to print stack
+    while(!s.empty()){
+        cout<<s.top()<<" ";
+        s.pop();
+    }
 
 }
