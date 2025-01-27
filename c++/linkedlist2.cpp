@@ -55,6 +55,24 @@ void deleteFromTo(Node* &head, int a, int b) {
         head = from;
     }
 }
+void InsertAt(Node* &head, int a, int value) {
+    Node* from = head;
+    Node* prev = NULL;
+
+    for (int i = 1; from != NULL && i < a; i++) {
+        prev = from;
+        from = from->next;
+    }
+    
+    Node* newNode = new Node(value);
+    if (prev != NULL) {
+        prev->next = newNode;
+    } else {
+        head = newNode;
+    }
+    newNode->next = from;
+}
+
 
 int main() {
     Node* link1 = new Node(10);
@@ -78,5 +96,7 @@ int main() {
     deleteFromTo(head, 2, 3);
     display(head);
 
+    InsertAt(head,2,786);
+    display(head);
     return 0;
 }
