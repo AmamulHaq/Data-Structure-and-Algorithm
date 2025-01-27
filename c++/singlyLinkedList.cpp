@@ -2,7 +2,7 @@
 using namespace std;
 
 class Node {
-    public:
+public:
     int data;
     Node* next;
 
@@ -28,10 +28,44 @@ void InsertAtHead(Node* &head, int d) {
     head = temp;
 }
 
-void InsertAtTail(Node* &tail, int d) {
+void deleteAtHead(Node* &head) {
+    if (head == NULL) return;
+    Node* temp = head;
+    head = head->next;
+    delete temp;
+}
+
+void deleteAtTail(Node* &head) {
+    if (head == NULL) return;
+
+    if (head->next == NULL) {
+        delete head;
+        head = NULL;
+        return;
+    }
+
+    Node* temp = head;
+    while (temp->next && temp->next->next) {
+        temp = temp->next;
+    }
+
+    delete temp->next;
+    temp->next = NULL;
+}
+
+void InsertAtTail(Node* &head, int d) {
     Node* temp = new Node(d);
-    tail->next = temp;
-    tail = temp;
+    if (head == NULL) {
+        head = temp;
+        return;
+    }
+
+    Node* last = head;
+    while (last->next != NULL) {
+        last = last->next;
+    }
+
+    last->next = temp;
 }
 
 void deleteFromTo(Node* &head, int a, int b) {
@@ -55,6 +89,7 @@ void deleteFromTo(Node* &head, int a, int b) {
         head = from;
     }
 }
+
 void InsertAt(Node* &head, int a, int value) {
     Node* from = head;
     Node* prev = NULL;
@@ -63,7 +98,7 @@ void InsertAt(Node* &head, int a, int value) {
         prev = from;
         from = from->next;
     }
-    
+
     Node* newNode = new Node(value);
     if (prev != NULL) {
         prev->next = newNode;
@@ -73,33 +108,35 @@ void InsertAt(Node* &head, int a, int value) {
     newNode->next = from;
 }
 
-
 int main() {
     Node* link1 = new Node(10);
     Node* head = link1;
-    Node* tail = link1;
 
     Node* link2 = new Node(30);
     link1->next = link2;
-    tail = link2;
 
     Node* link3 = new Node(40);
     link2->next = link3;
-    tail = link3;
 
     InsertAtHead(head, 12);
     display(head);
 
-    InsertAtTail(tail, 43);
+    InsertAtTail(head, 43);
     display(head);
 
     deleteFromTo(head, 2, 3);
     display(head);
 
-    InsertAt(head,2,786);
+    InsertAt(head, 2, 786);
     display(head);
 
-    deleteFromTo(head,3,3);
+    deleteFromTo(head, 3, 3);
+    display(head);
+
+    deleteAtHead(head);
+    display(head);
+
+    deleteAtTail(head);
     display(head);
 
     return 0;
