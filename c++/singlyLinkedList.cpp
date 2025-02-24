@@ -12,131 +12,137 @@ public:
     }
 };
 
-void display(Node* &head) {
+void display(Node* head) {
     Node* temp = head;
     while (temp != NULL) {
-        cout << "Data: " << temp->data << " ";
-        cout << "Pointing: " << temp << endl;
+        cout << "Data: " << temp->data;
+        if (temp->next != NULL) {
+            cout << " | -> " << temp->next->data << endl;
+        } else {
+            cout << " | -> NULL" << endl;
+        }
         temp = temp->next;
     }
     cout << endl;
 }
 
-void InsertAtHead(Node* &head, int d) {
-    Node* temp = new Node(d);
-    temp->next = head;
-    head = temp;
+void InsertAtFirst(Node* &head, int d) {
+    Node* newNode = new Node(d);
+    newNode->next = head;
+    head = newNode;
 }
 
-void deleteAtHead(Node* &head) {
-    if (head == NULL) return;
+void InsertAtLast(Node* &head, int d) {
+    Node* last = new Node(d);
+    if (head == NULL) {
+        head = last;
+        return;
+    }
+    Node* temp = head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    temp->next = last;
+}
+
+void InsertAfter(Node* &head, int after, int value) {
+    Node* temp = head;
+    while (temp != NULL && temp->data != after) {
+        temp = temp->next;
+    }
+    if (temp == NULL) {
+        cout << "Node with value " << after << " not found!" << endl;
+        return;
+    }
+    Node* newNode = new Node(value);
+    newNode->next = temp->next;
+    temp->next = newNode;
+}
+
+void deleteAtFirst(Node* &head) {
+    if (head == NULL) {
+        cout << "List is already empty!" << endl;
+        return;
+    }
     Node* temp = head;
     head = head->next;
     delete temp;
 }
 
-void deleteAtTail(Node* &head) {
-    if (head == NULL) return;
-
+void deleteAtLast(Node* &head) {
+    if (head == NULL) {
+        cout << "List is already empty!" << endl;
+        return;
+    }
     if (head->next == NULL) {
         delete head;
         head = NULL;
         return;
     }
-
     Node* temp = head;
-    while (temp->next && temp->next->next) {
+    while (temp->next->next != NULL) {
         temp = temp->next;
     }
-
     delete temp->next;
     temp->next = NULL;
 }
 
-void InsertAtTail(Node* &head, int d) {
-    Node* temp = new Node(d);
+void deleteFromTo(Node* &head, int From, int To) {
     if (head == NULL) {
-        head = temp;
+        cout << "List is empty!" << endl;
         return;
     }
 
-    Node* last = head;
-    while (last->next != NULL) {
-        last = last->next;
-    }
-
-    last->next = temp;
-}
-
-void deleteFromTo(Node* &head, int a, int b) {
-    Node* from = head;
+    Node* temp = head;
     Node* prev = NULL;
 
-    for (int i = 1; from != NULL && i < a; i++) {
-        prev = from;
-        from = from->next;
+    while (temp != NULL && temp->data != From) {
+        prev = temp;
+        temp = temp->next;
     }
 
-    for (int i = a; from != NULL && i <= b; i++) {
-        Node* next = from->next;
-        delete from;
-        from = next;
+    if (temp == NULL) {
+        cout << "Node with value " << From << " not found!" << endl;
+        return;
+    }
+
+    Node* current = temp;
+    while (current != NULL && current->data != To) {
+        Node* next = current->next;
+        delete current;
+        current = next;
     }
 
     if (prev != NULL) {
-        prev->next = from;
+        prev->next = current;
     } else {
-        head = from;
+        head = current;
     }
-}
-
-void InsertAt(Node* &head, int a, int value) {
-    Node* from = head;
-    Node* prev = NULL;
-
-    for (int i = 1; from != NULL && i < a; i++) {
-        prev = from;
-        from = from->next;
-    }
-
-    Node* newNode = new Node(value);
-    if (prev != NULL) {
-        prev->next = newNode;
-    } else {
-        head = newNode;
-    }
-    newNode->next = from;
 }
 
 int main() {
-    Node* link1 = new Node(10);
-    Node* head = link1;
+    Node* head = new Node(10);
+    head->next = new Node(30);
+    head->next->next = new Node(40);
 
-    Node* link2 = new Node(30);
-    link1->next = link2;
-
-    Node* link3 = new Node(40);
-    link2->next = link3;
-
-    InsertAtHead(head, 12);
     display(head);
 
-    InsertAtTail(head, 43);
+    InsertAtFirst(head, 12);
     display(head);
 
-    deleteFromTo(head, 2, 3);
+    InsertAtLast(head, 43);
     display(head);
 
-    InsertAt(head, 2, 786);
+    InsertAfter(head, 30, 786);
     display(head);
 
-    deleteFromTo(head, 3, 3);
+    deleteFromTo(head, 10, 40);
     display(head);
 
-    deleteAtHead(head);
+    deleteAtFirst(head);
     display(head);
 
-    deleteAtTail(head);
+    deleteAtLast(head);
     display(head);
 
     return 0;
