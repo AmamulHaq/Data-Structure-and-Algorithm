@@ -22,7 +22,7 @@ void isFull() {
 }
 
 void Push(int t) {
-    if (s.size() >= MAX_SIZE) {
+    if (s.top() >= MAX_SIZE) {
         cout << "Stack is FULL. Cannot push " << t << endl;
     } else {
         s.push(t);
@@ -31,16 +31,16 @@ void Push(int t) {
 }
 
 void Pop() {
-    if (s.empty()) {
-        cout << "Stack is already empty!" << endl;
+    if (s.top()==-1) {
+       cout << "Stack is already empty!" << endl;
     } else {
-        cout << "Popped: " << s.top() << endl;
+     cout << "Popped: " << s.top() << endl;
         s.pop();
     }
 }
 
 void Display() {
-    if (s.empty()) {
+    if (s.top()==-1) {
         cout << "Stack is Empty." << endl;
         return;
     }
