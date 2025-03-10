@@ -27,9 +27,9 @@ void display(Node* head) {
 }
 
 void InsertAtFirst(Node* &head, int d) {
-    Node* newNode = new Node(d);
-    newNode->next = head;
-    head = newNode;
+    Node* first = new Node(d);
+    first->next = head;
+    head = first;
 }
 
 void InsertAtLast(Node* &head, int d) {
@@ -43,20 +43,21 @@ void InsertAtLast(Node* &head, int d) {
         temp = temp->next;
     }
     temp->next = last;
+    last->next = NULL;
 }
 
-void InsertAfter(Node* &head, int after, int value) {
+void InsertAfter(Node* &head, int aft, int value) {
+    Node* after = new Node(value);
     Node* temp = head;
-    while (temp != NULL && temp->data != after) {
+    while (temp != NULL && temp->data != aft) {
         temp = temp->next;
     }
     if (temp == NULL) {
-        cout << "Node with value " << after << " not found!" << endl;
+        cout << "Node with value " << aft << " not found!" << endl;
         return;
     }
-    Node* newNode = new Node(value);
-    newNode->next = temp->next;
-    temp->next = newNode;
+    after->next = temp->next;
+    temp->next = after;
 }
 
 void deleteAtFirst(Node* &head) {
@@ -64,40 +65,33 @@ void deleteAtFirst(Node* &head) {
         cout << "List is already empty!" << endl;
         return;
     }
-    Node* temp = head;
+    Node* first = head;
     head = head->next;
-    delete temp;
+    delete first;
 }
 
 void deleteAtLast(Node* &head) {
-    if (head == NULL) {
-        cout << "List is already empty!" << endl;
-        return;
-    }
-    if (head->next == NULL) {
+    if (head == NULL || head->next == NULL) {
+        cout << "List is already empty! or single node" << endl;
         delete head;
         head = NULL;
         return;
     }
-    Node* temp = head;
-    while (temp->next->next != NULL) {
-        temp = temp->next;
+    Node* last = head;
+    while (last->next->next != NULL) {
+        last = last->next;
     }
-    delete temp->next;
-    temp->next = NULL;
+    delete last->next;
+    last->next = NULL;
 }
 
 void deleteFromTo(Node* &head, int From, int To) {
-    if (head == NULL) {
-        cout << "List is empty!" << endl;
-        return;
-    }
-
     Node* temp = head;
-    Node* prev = NULL;
+    Node* prevNode = NULL;
 
+    // Find the node with value 'From'
     while (temp != NULL && temp->data != From) {
-        prev = temp;
+        prevNode = temp;
         temp = temp->next;
     }
 
@@ -106,25 +100,46 @@ void deleteFromTo(Node* &head, int From, int To) {
         return;
     }
 
-    Node* current = temp;
-    while (current != NULL && current->data != To) {
-        Node* next = current->next;
-        delete current;
-        current = next;
+    Node* startNode = temp;  // 'From' node found
+
+    // Delete nodes from 'From' to 'To'
+    while (temp != NULL && temp->data != To) {
+        Node* nextNode = temp->next;
+        delete temp;
+        temp = nextNode;
     }
 
-    if (prev != NULL) {
-        prev->next = current;
+    // If 'To' node is not found, delete all nodes from 'From' onward
+    if (temp == NULL) {
+        cout << "Node with value " << To << " not found!" << endl;
     } else {
-        head = current;
+        // 'To' node found, delete it
+        Node* nextNode = temp->next;
+        delete temp;
+        temp = nextNode;
     }
+
+    // Adjust the head pointer or previous node's next pointer
+    if (prevNode != NULL) {
+        prevNode->next = temp;  // Now points to the node after the deleted nodes
+    } else {
+        head = temp;  // If the 'From' node was the head
+    }
+
+    // Ensure the last node's next is set to NULL if necessary
+    if (temp == NULL) {
+        prevNode->next = NULL;
+    }
+
+    cout << "Deleted all nodes from " << From << " to the end." << endl;
 }
 
+
+
 int main() {
-    Node* head = new Node(10);
+    Node* head = new Node(786);
     head->next = new Node(30);
     head->next->next = new Node(40);
-
     display(head);
 
     InsertAtFirst(head, 12);
@@ -133,10 +148,10 @@ int main() {
     InsertAtLast(head, 43);
     display(head);
 
-    InsertAfter(head, 30, 786);
+    InsertAfter(head, 30, 5);
     display(head);
 
-    deleteFromTo(head, 10, 40);
+    deleteFromTo(head, 30, 40);
     display(head);
 
     deleteAtFirst(head);
