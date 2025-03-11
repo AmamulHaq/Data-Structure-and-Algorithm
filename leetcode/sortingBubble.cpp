@@ -2,7 +2,7 @@
 using namespace std;
 
 int main() {
-    int SIZE;
+    int SIZE,min=0;
     cout<<"Enter no of elements: ";
     cin>>SIZE;
     int array[SIZE];
@@ -10,15 +10,16 @@ int main() {
     for (int i = 0; i < SIZE; i++) {
         cin >>array[i];
     }
-    //insertion algorithm
-    for (int i = 1; i < SIZE; i++) {
-        if (array[i - 1] > array[i]) {
-            for (int j = i; j > 0 && array[j - 1] > array[j]; j--) {
-            swap(array[j - 1] , array[j]);
+    //bubble sort with i =0 , j=0
+    for (int i = 0; i < SIZE-1; i++)
+    {
+        for (int j = 0; j < SIZE-i-1; j++)
+        {
+            if (array[j] > array[j+1]){
+            swap(array[j] , array[j+1]);
             }
         }
-    }
-    //
+    }//
     for (int i = 0; i < SIZE; i++) {
         cout << array[i] << " ";
     }
