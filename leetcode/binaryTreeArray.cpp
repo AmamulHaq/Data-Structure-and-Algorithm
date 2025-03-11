@@ -1,8 +1,6 @@
 #include <iostream>
 using namespace std;
-
-#define SIZE 15
-
+int SIZE;
 void printTree(char tree[]) {
     cout << "| Index | Node | Parent |\n";
     cout << "-------------------------\n";
@@ -20,7 +18,13 @@ void printTree(char tree[]) {
 }
 
 int main() {
-    char tree[SIZE] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', '-', '-', 'H', 'I', 'J', 'K', '-', '-'};
+    cout<<"Enter no of nodes: "<<endl;
+    cin>>SIZE;
+    char tree[SIZE];
+    cout<<"Enter sequence of nodes: "<<endl;
+    for(int i=0; i<SIZE; i++){
+    cin>>tree[i];
+    }
     printTree(tree);
     return 0;
 }
