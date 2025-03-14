@@ -3,156 +3,141 @@
 using namespace std;
 
 struct Node {
-    int data;
-    Node* left;
-    Node* right;
-    Node* parent;
-    Node(int value) : data(value), left(nullptr), right(nullptr), parent(nullptr) {}
+    int d;
+    Node* L;
+    Node* R;
+    Node* P;
+    Node(int v) : d(v), L(nullptr), R(nullptr), P(nullptr) {}
 };
 
 class BST {
 public:
-    Node* root;
-    map<Node*, int> indexMap;
+    Node* r;
+    map<Node*, int> idx;
 
-    BST() : root(nullptr) {}
+    BST() : r(nullptr) {}
 
-    void insert(int value) {
-        Node* newNode = new Node(value);
-        if (!root) {
-            root = newNode;
-            indexMap[newNode] = 0;
+    void upd(Node* n, int i) {
+        if (!n) return;
+        idx[n] = i;
+        upd(n->L, 2 * i + 1);
+        upd(n->R, 2 * i + 2);
+    }
+
+    void ins(int v) {
+        Node* n = new Node(v);
+        if (!r) {
+            r = n;
+            idx[n] = 0;
             return;
         }
-        Node* current = root;
-        Node* parent = nullptr;
-        int index = 0;
-        while (current) {
-            parent = current;
-            if (value < current->data) {
-                if (!current->left) {
-                    index = 2 * indexMap[parent] + 1;
+        Node* c = r;
+        Node* p = nullptr;
+        int i = 0;
+        while (c) {
+            p = c;
+            if (v < c->d) {
+                if (!c->L) {
+                    i = 2 * idx[p] + 1;
                     break;
                 }
-                current = current->left;
-            } else if (value > current->data) {
-                if (!current->right) {
-                    index = 2 * indexMap[parent] + 2;
+                c = c->L;
+            } else if (v > c->d) {
+                if (!c->R) {
+                    i = 2 * idx[p] + 2;
                     break;
                 }
-                current = current->right;
+                c = c->R;
             } else {
                 return;
             }
         }
-        newNode->parent = parent;
-        indexMap[newNode] = index;
-        if (value < parent->data)
-            parent->left = newNode;
+        n->P = p;
+        idx[n] = i;
+        if (v < p->d)
+            p->L = n;
         else
-            parent->right = newNode;
+            p->R = n;
+        upd(r, 0);
     }
 
-    void updateIndexes(Node* node, int index) {
-        if (!node) return;
-        indexMap[node] = index;
-        updateIndexes(node->left, 2 * index + 1);
-        updateIndexes(node->right, 2 * index + 2);
-    }
-
-    void printTree() {
-        cout << "| Index | Node | Parent |\n";
-        cout << "-------------------------\n";
+    void print() {
+        cout << "|Index | Node |Parent|\n";
+        cout << "-------------\n";
         for (int i = 0; i < 15; i++) {
-            bool found = false;
-            for (auto it : indexMap) {
+            bool f = false;
+            for (auto it : idx) {
                 if (it.second == i) {
-                    int parent = it.first->parent ? it.first->parent->data : -1;
-                    cout << "| " << i << "     | " << it.first->data << "    | " << parent << "      |\n";
-                    found = true;
+                    int p = it.first->P ? it.first->P->d : -1;
+                    cout << "| " << i << "  |  " << it.first->d << "  | " << p << "  |\n";
+                    f = true;
                     break;
                 }
             }
-            if (!found)
-                cout << "| " << i << "     |  _   |   _   |\n";
+            if (!f)
+                cout << "| " << i << "  |  _   |  _  |\n";
         }
     }
 
-    void insertNode(int value) {
-        insert(value);
-        updateIndexes(root, 0);
-        cout << "Inserted node " << value << " successfully.\n";
+    Node* min(Node* n) {
+        while (n && n->L) n = n->L;
+        return n;
     }
 
-    Node* findMin(Node* node) {
-        while (node && node->left) node = node->left;
-        return node;
+    Node* find(Node* n, int v) {
+        if (!n || n->d == v) return n;
+        if (v < n->d) return find(n->L, v);
+        return find(n->R, v);
     }
 
-    Node* search(Node* node, int value) {
-        if (!node || node->data == value) return node;
-        if (value < node->data) return search(node->left, value);
-        return search(node->right, value);
-    }
+    void del(int v) {
+        Node* d = find(r, v);
+        if (!d) return;
 
-    void deleteNode(int value) {
-        Node* nodeToDelete = search(root, value);
-        if (!nodeToDelete) {
-            cout << "Node " << value << " not found.\n";
-            return;
-        }
-        Node* parent = nodeToDelete->parent;
-
-        if (!nodeToDelete->left && !nodeToDelete->right) {
-            if (!parent) root = nullptr;
-            else if (parent->left == nodeToDelete) parent->left = nullptr;
-            else parent->right = nullptr;
-            indexMap.erase(nodeToDelete);
-            delete nodeToDelete;
-        } else if (!nodeToDelete->left || !nodeToDelete->right) {
-            Node* child = nodeToDelete->left ? nodeToDelete->left : nodeToDelete->right;
-            if (!parent) root = child;
-            else if (parent->left == nodeToDelete) parent->left = child;
-            else parent->right = child;
-            child->parent = parent;
-            indexMap.erase(nodeToDelete);
-            delete nodeToDelete;
+        if (!d->L && !d->R) {
+            if (!d->P) r = nullptr;
+            else if (d->P->L == d) d->P->L = nullptr;
+            else d->P->R = nullptr;
+        } else if (!d->L || !d->R) {
+            Node* ch = d->L ? d->L : d->R;
+            if (!d->P) r = ch;
+            else if (d->P->L == d) d->P->L = ch;
+            else d->P->R = ch;
+            ch->P = d->P;
         } else {
-            Node* successor = findMin(nodeToDelete->right);
-            nodeToDelete->data = successor->data;
-            deleteNode(successor->data);
-            return;
+            Node* s = min(d->R);
+            d->d = s->d;
+            if (s->P->L == s) s->P->L = s->R;
+            else s->P->R = s->R;
+            if (s->R) s->R->P = s->P;
+            d = s;
         }
-
-        updateIndexes(root, 0);
-        cout << "Deleted node " << value << " successfully.\n";
+        idx.erase(d);
+        delete d;
+        upd(r, 0);
     }
 };
 
 int main() {
-    int SIZE;
+    int sz;
     cout << "Enter number of nodes: ";
-    cin >> SIZE;
-    BST tree;
+    cin >> sz;
+    BST t;
     cout << "Enter sequence of nodes: " << endl;
-    for (int i = 0; i < SIZE; i++) {
-        int value;
-        cin >> value;
-        tree.insert(value);
+    for (int i = 0; i < sz; i++) {
+        int v;
+        cin >> v;
+        t.ins(v);
     }
-
-    tree.printTree();
-
-    int insertVal, deleteVal;
+    t.print();
+    int insVal, delVal;
     cout << "Enter a node to insert: ";
-    cin >> insertVal;
-    tree.insertNode(insertVal);
-    tree.printTree();
-
+    cin >> insVal;
+    t.ins(insVal);
+    t.print();
     cout << "Enter a node to delete: ";
-    cin >> deleteVal;
-    tree.deleteNode(deleteVal);
-    tree.printTree();
-
+    cin >> delVal;
+    t.del(delVal);
+    t.print();
     return 0;
 }
