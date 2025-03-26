@@ -89,7 +89,6 @@ void deleteFromTo(Node* &head, int From, int To) {
     Node* temp = head;
     Node* prevNode = NULL;
 
-    // Find the node with value 'From'
     while (temp != NULL && temp->data != From) {
         prevNode = temp;
         temp = temp->next;
@@ -100,33 +99,28 @@ void deleteFromTo(Node* &head, int From, int To) {
         return;
     }
 
-    Node* startNode = temp;  // 'From' node found
+    Node* startNode = temp; 
 
-    // Delete nodes from 'From' to 'To'
     while (temp != NULL && temp->data != To) {
         Node* nextNode = temp->next;
         delete temp;
         temp = nextNode;
     }
 
-    // If 'To' node is not found, delete all nodes from 'From' onward
     if (temp == NULL) {
         cout << "Node with value " << To << " not found!" << endl;
     } else {
-        // 'To' node found, delete it
         Node* nextNode = temp->next;
         delete temp;
         temp = nextNode;
     }
 
-    // Adjust the head pointer or previous node's next pointer
     if (prevNode != NULL) {
-        prevNode->next = temp;  // Now points to the node after the deleted nodes
+        prevNode->next = temp;  
     } else {
-        head = temp;  // If the 'From' node was the head
+        head = temp;  
     }
 
-    // Ensure the last node's next is set to NULL if necessary
     if (temp == NULL) {
         prevNode->next = NULL;
     }
