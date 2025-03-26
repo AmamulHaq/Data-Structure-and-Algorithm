@@ -35,6 +35,7 @@ void toh(stack<int>& source, stack<int>& auxiliary, stack<int>& sink, int n) {
 int main() {
     // cout << "Enter number of discs: ";
     // cin >> num;
+    int num = 3;
     for (int i = num; i > 0; i--) {
         A.push(i);
     }
