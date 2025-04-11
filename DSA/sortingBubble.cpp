@@ -10,6 +10,7 @@ int main() {
     for (int i = 0; i < SIZE; i++) {
         cin >>array[i];
     }
+    //int array[SIZE]={25,57,48,37,12,92,86,33};
     //bubble sort with i =0 , j=0
     for (int i = 0; i < SIZE-1; i++)
     {

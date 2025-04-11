@@ -39,7 +39,7 @@ int main() {
     for (int i = 0; i < n; i++) {
         cin >> arr[i];
     }
-
+//int array[SIZE]={25,57,48,37,12,92,86,33};
     heapSort(arr, n);
 
     cout << "Sorted array: ";

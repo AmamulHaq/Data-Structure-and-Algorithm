@@ -10,6 +10,7 @@ int main() {
     for (int i = 0; i < SIZE; i++) {
         cin >>array[i];
     }
+    //int array[SIZE]={25,57,48,37,12,92,86,33};
     //exchange sorting i =0 and j = i+1 
     for (int i = 0; i < SIZE; i++)
     {

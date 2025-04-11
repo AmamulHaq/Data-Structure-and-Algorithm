@@ -11,6 +11,7 @@ int main() {
     for (int i = 0; i < SIZE; i++) {
         cin >> array[i];
     }
+    //int array[SIZE]={25,57,48,37,12,92,86,33};
 // selection sort for min index
     for (int i = 0; i < SIZE - 1; i++) {
         int min = i;
