@@ -41,6 +41,8 @@ int main() {
     for (int i = 0; i < n; i++) {
         cin >> array[i];
     }
+    //int n = 8;
+    //int array[n]={25,57,48,37,12,92,86,33};
 
     quicksort(array, 0, n - 1);
 
